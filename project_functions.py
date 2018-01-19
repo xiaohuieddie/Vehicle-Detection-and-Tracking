@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 from skimage.feature import hog
+from sklearn.metrics import confusion_matrix
 
 # Define a function to return HOG features and visualization
 def get_hog_features(img, orient, pix_per_cell, cell_per_block, vis=False, feature_vec=True):
@@ -156,9 +157,9 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
             # Scale features and make a prediction
             test_features = X_scaler.transform(np.hstack((spatial_features, hist_features, hog_features)).reshape(1, -1))    
             #test_features = X_scaler.transform(np.hstack((shape_feat, hist_feat)).reshape(1, -1))    
-            test_prediction = svc.predict(test_features)
+            confidence_prediction = svc.decision_function(test_features)
             
-            if test_prediction == 1:
+            if confidence_prediction > 1.5:
                 xbox_left = np.int(xleft*scale)
                 ytop_draw = np.int(ytop*scale)
                 win_draw = np.int(window*scale)
