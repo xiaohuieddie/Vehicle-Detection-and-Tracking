@@ -167,7 +167,7 @@ def find_cars(img, ystart, ystop, xstart, xstop, scale, step, svc, X_scaler, ori
             #             test_features = X_scaler.transform(np.hstack((shape_feat, hist_feat)).reshape(1, -1))
             confidence_prediction = svc.decision_function(test_features)
             
-            if confidence_prediction>0:
+            if confidence_prediction>0.7:
                 xbox_left = np.int(xleft*scale_temp) + xstart
                 ytop_draw = np.int(ytop*scale_temp)
                 win_draw = np.int(window*scale_temp)
@@ -210,3 +210,9 @@ def draw_labeled_bboxes(img, labels):
     # Return the image
     return img, bboxes
 
+# Define a function to draw bounding boxes on an image
+def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
+    imcopy = np.copy(img) # Make a copy of the image
+    for bbox in bboxes: # Iterate through the bounding boxes
+        cv2.rectangle(imcopy, bbox[0], bbox[1], color, thick)
+    return imcopy
